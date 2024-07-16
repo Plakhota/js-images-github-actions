@@ -41,6 +41,6 @@ jobs:
         run: curl -v -L -d '' -X POST "eyesapi.applitools.com/api/externals/github/push?apiKey=${APPLITOOLS_API_KEY}&CommitSha=${GITHUB_SHA}&BranchName=${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
       - name: Run Tests
         run: npm test
-      - name: Comlete GitHub check
+      - name: Comlete GitHub check 
         run: echo AutoCompleteEnabled#curl -v -L -d '' -X POST "eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"
         
