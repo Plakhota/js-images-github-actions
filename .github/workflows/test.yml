@@ -43,5 +43,5 @@ jobs:
         run: npm test
       - name: Comlete GitHub check 
         if: always()
-        run: curl -v -L -d '' -X POST "eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"
+        run: curl -v -L -d '' -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"
         
