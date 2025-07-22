@@ -41,17 +41,17 @@ jobs:
       - run: npm ci
       - name: Prepare for push event may be use BranchName=${GITHUB_REPOSITORY}/${GITHUB_HEAD_REF}
         run: curl -v -L -d '' -X POST "https://eyesapi.applitools.com/api/externals/github/push?apiKey=${APPLITOOLS_API_KEY}&CommitSha=${GITHUB_SHA}&BranchName=${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
-      - name: Rebase onto main branch
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+      # - name: Rebase onto main branch
+      #   run: |
+      #     git config --global user.name 'GitHub Actions'
+      #     git config --global user.email 'actions@github.com'
           
-          # Change 'main' to your repository's default branch if it's different (e.g., 'master')
-          BASE_BRANCH=main
+      #     # Change 'main' to your repository's default branch if it's different (e.g., 'master')
+      #     BASE_BRANCH=main
           
-          # Fetch the latest state of the base branch and rebase onto it
-          git fetch origin $BASE_BRANCH
-          git rebase origin/$BASE_BRANCH
+      #     # Fetch the latest state of the base branch and rebase onto it
+      #     git fetch origin $BASE_BRANCH
+      #     git rebase origin/$BASE_BRANCH
     
       - name: Run Tests
         run: npm test
