@@ -1,62 +1,55 @@
 # This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow on push events
 on:
   push:
     branches:
       - '**'
-        
+      
 env:
-    APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-    APPLITOOLS_BATCH_NAME: ${{ github.ref }}
-    APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
-    # APPLITOOLS_BRANCH_NAME: ${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}
-    APPLITOOLS_COMPARE_WITH_PARENT_BRANCH: true
-    APPLITOOLS_SHOW_LOGS: true
+  APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+  APPLITOOLS_BATCH_NAME: ${{ github.ref }}
+  APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
+  APPLITOOLS_COMPARE_WITH_PARENT_BRANCH: true
+  APPLITOOLS_SHOW_LOGS: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test-content:
     runs-on: ubuntu-latest
     steps:
+      # Use v4 and add fetch-depth: 0 to get the full git history
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Use the modern syntax for setting output variables
       - name: Extract branch name
-        shell: bash
-        run: echo BRANCH_NAME="##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
-      - name: Log  Git SHA
-        run: echo GITHUB_SHA="$GITHUB_SHA"
-      - name: Log env
-        run: env
-      - name: Log  "{{ github.event.pull_request.head.sha }}"
-        run: echo ${{ github }}
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: '16.x'
+          cache: 'npm' # Speeds up builds by caching dependencies
+
       - run: npm ci
-      - name: Prepare for push event may be use BranchName=${GITHUB_REPOSITORY}/${GITHUB_HEAD_REF}
+      
+      - name: Prepare for push event
         run: curl -v -L -d '' -X POST "https://eyesapi.applitools.com/api/externals/github/push?apiKey=${APPLITOOLS_API_KEY}&CommitSha=${GITHUB_SHA}&BranchName=${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
-     
+      
       - name: Rebase onto main branch
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          
-          # Change 'main' to your repository's default branch if it's different (e.g., 'master')
-          BASE_BRANCH=main
-          
-          # Fetch the latest state of the base branch and rebase onto it
-          git fetch origin $BASE_BRANCH
-          git rebase origin/$BASE_BRANCH
+          git rebase origin/main
           
       - name: Run Tests
         run: npm test
-      - name: Comlete GitHub check 
+
+      - name: Complete GitHub check 
         if: always()
         run: curl -v -L -d '' -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"
-        
