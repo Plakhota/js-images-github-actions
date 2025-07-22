@@ -1,6 +1,6 @@
 # Applitools Tutorial - Images in JavaScript
 
-Get started with Applitools Eyes automated visual testing with this example using [Eyes Images SDK](https://www.npmjs.com/package/@applitools/eyes-images).
+Get started with Applitools Eyes automated visual testing with this example using [Eyes Images SDK](https://www.npmjs.com/package/@applitools/eyes-images). 
 
 Learn more about how to install and start this project with our [JavaScript Images tutorial](https://applitools.com/tutorials/screenshots-javascript.html)!
 
