@@ -42,7 +42,7 @@ jobs:
       - name: Prepare for push event may be use BranchName=${GITHUB_REPOSITORY}/${GITHUB_HEAD_REF}
         run: curl -v -L -d '' -X POST "https://eyesapi.applitools.com/api/externals/github/push?apiKey=${APPLITOOLS_API_KEY}&CommitSha=${GITHUB_SHA}&BranchName=${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
       - name: Rebase onto main branch
-        uses: cirrus-actions/rebase@v1.8
+        uses: cirrus-actions/rebase@v1
         # This action will attempt to rebase onto 'main' or 'master' by default.
         # If your main branch has a different name, specify it like this:
         # with:
