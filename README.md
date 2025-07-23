@@ -15,6 +15,6 @@ More about the Eyes Images SDK:
 * https://www.npmjs.com/package/@applitools/eyes-images
 * https://applitools.com/docs/api/eyes-sdk/index-gen/classindex-images-javascript.html
  
- 
+  
  
  
